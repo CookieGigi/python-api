@@ -4,4 +4,4 @@ install:
 	uv sync
 
 dev:
-	uv run fastapi dev
+	PYTHONPATH=src uv run fastapi dev

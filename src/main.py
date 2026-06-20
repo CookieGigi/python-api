@@ -1,3 +1,6 @@
 from api import create_app
+from .dependencies import APIDependencies
 
-app = create_app()
+apiDependencies = APIDependencies()
+
+app = create_app(apiDependencies)

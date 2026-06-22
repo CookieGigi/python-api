@@ -15,3 +15,7 @@ class Config(BaseSettings):
     )
 
     version: str = Field(default="0.0.0", validation_alias="VERSION")
+
+    cors_origins: list[str] = Field(
+        default=["http://localhost:5173"], validation_alias="CORS_ORIGINS"
+    )

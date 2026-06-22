@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [tool.fastapi]
-entrypoint = "src.main:app"
+entrypoint = "main:app"
 
 [dependency-groups]
 dev = [
@@ -27,6 +27,7 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = "tests"
+pythonpath = ["src"]
 addopts = "-v --tb=short"
 
 [tool.setuptools]

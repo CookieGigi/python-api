@@ -1,12 +1,12 @@
 import pytest
 from httpx import AsyncClient, ASGITransport
-from src.api.app import create_app
-from src.configuration import Config
+from api.app import create_app
+from configuration import Config
 from dependency_injector import containers, providers
 
 
 class TestContainer(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=["src.api"])
+    wiring_config = containers.WiringConfiguration(modules=["api"])
 
     # pydantic_config instance as a singleton provider
     config = providers.Singleton(

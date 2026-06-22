@@ -1,5 +1,5 @@
 from api import create_app
-from .dependencies import APIDependencies
+from dependencies import APIDependencies
 
 apiDependencies = APIDependencies()
 

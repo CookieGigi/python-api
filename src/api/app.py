@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from .router import defaultRouter
+from api.router import defaultRouter, healthRouter
 from dependency_injector import containers
-from .exceptions import register_exception_handlers
+from api.exceptions import register_exception_handlers
 
 
 def create_app(dependencies: containers.DeclarativeContainer) -> FastAPI:

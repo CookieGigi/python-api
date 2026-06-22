@@ -3,6 +3,6 @@ from configuration import Config
 
 
 class APIDependencies(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=["api"])
+    wiring_config = containers.WiringConfiguration(packages=["api"])
 
     config = providers.Singleton(Config)

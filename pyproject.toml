@@ -36,6 +36,7 @@ packages = ["src"]
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+extraPaths = ["src"]
 
 [tool.mypy]
 python_executable = ".venv/bin/python"

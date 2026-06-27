@@ -1,39 +1,34 @@
-from typing import Literal
-
-from fastapi import APIRouter
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends, Response
 
 from dependency_injector.wiring import inject, Provide
 from dependencies import APIDependencies
 from configuration import Config
-from models.check import Check
+from services.health_check_service import HealthCheckService
+from api.schemas.health import HealthResponse, ReadyResponse
 
 
 router = APIRouter()
 
 
-class HealthResponse(BaseModel):
-    status: Literal["ok"] = Field(default="ok")
-    version: str = Field(default="0.0.0")
-
-
 @router.get("/health")
 @inject
 async def get_health(
-    config: Config = Provide[APIDependencies.config],
+    config: Config = Depends(Provide[APIDependencies.config]),
 ) -> HealthResponse:
     return HealthResponse(version=config.version)
-
-
-class ReadyResponse(BaseModel):
-    status: Literal["ok", "degraded", "error"] = Field(default="ok")
-    version: str = Field(default="0.0.0")
-    checks: list[Check] = Field(default=[])
 
 
 @router.get("/ready")
 @inject
 async def get_ready(
-    config: Config = Provide[APIDependencies.config],
+    response: Response,
+    config: Config = Depends(Provide[APIDependencies.config]),
+    check_service: HealthCheckService = Depends(
+        Provide[APIDependencies.health_check_service]
+    ),
 ) -> ReadyResponse:
-    return ReadyResponse(version=config.version)
+    check_results, status = await check_service.run_checks()
+
+    if status != "ok":
+        response.status_code = 503
+    return ReadyResponse(version=config.version, checks=check_results, status=status)

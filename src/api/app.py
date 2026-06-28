@@ -79,6 +79,9 @@ def create_app(dependencies: containers.DeclarativeContainer) -> FastAPI:
     config = dependencies.config()
     _configure_structlog(config)
 
+    llm = dependencies.llm_service()
+    print(llm)
+
     app = FastAPI(debug=config.env == "dev")
     app.container = dependencies  # type: ignore
     register_exception_handlers(app)

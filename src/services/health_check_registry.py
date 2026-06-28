@@ -8,6 +8,7 @@ class HealthCheckRegistry:
         self._checks = []
 
     def register(self, check: HealthCheck):
+
         self._checks.append(check)
 
     def get_checks(self) -> list[HealthCheck]:

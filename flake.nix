@@ -64,6 +64,7 @@
           ${pre-commit-check.shellHook}
 
           export UV_LINK_MODE=copy
+          export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [pkgs.stdenv.cc.cc.lib]}:$LD_LIBRARY_PATH"
         '';
         buildInputs = with pkgs;
           [
@@ -79,6 +80,7 @@
             lnav
             traefik
             mkcert
+            stdenv.cc.cc.lib
           ]
           ++ pre-commit-check.enabledPackages;
       };

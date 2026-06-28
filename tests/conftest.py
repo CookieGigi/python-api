@@ -9,7 +9,8 @@ from dependencies import APIDependencies
 def test_config(monkeypatch):
     """Override env vars before container instantiates Config."""
     monkeypatch.setenv("ENV", "testing")
-    return Config(_env_file=".env.test")
+    monkeypatch.setenv("VERSION", "test-version")
+    return Config()
 
 
 @pytest.fixture

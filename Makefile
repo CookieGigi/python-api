@@ -11,7 +11,7 @@ dev-with-logs:
 	PYTHONPATH=src uv run fastapi dev --reload-dir src/ 2>&1 | tee logs/app.log
 
 tests:
-	uv run pytest
+	uv run --no-env-file pytest
 
 watch-logs:
 	@mkdir -p logs

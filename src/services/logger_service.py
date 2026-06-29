@@ -1,8 +1,11 @@
+import logging
 from typing import Self
 
 import structlog
 
 from configuration import Config
+
+_structlog_initialized = False
 
 
 class LoggerService:
@@ -10,7 +13,7 @@ class LoggerService:
     _logger: structlog.BoundLogger
 
     def __init__(self, config: Config) -> None:
-        self._logger = structlog.getLogger(service=config.name)
+        self._logger = structlog.get_logger(service=config.name)
         self._config = config
 
     def bind(self, **kwargs) -> Self:
@@ -41,3 +44,28 @@ class LoggerService:
 
     def exception(self, event: str, **kwargs):
         self._logger.exception(event, **kwargs)
+
+    @staticmethod
+    def configure(config: Config) -> None:
+        global _structlog_initialized
+        if _structlog_initialized:
+            return
+        _structlog_initialized = True
+
+        level = getattr(logging, config.effective_log_level.upper())
+        is_json = config.log_format == "json" or config.env == "prod"
+        renderer = (
+            structlog.processors.JSONRenderer()
+            if is_json
+            else structlog.dev.ConsoleRenderer(colors=True)
+        )
+
+        structlog.configure(
+            processors=[
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.add_log_level,
+                structlog.processors.TimeStamper(fmt="iso"),
+                renderer,
+            ],
+            wrapper_class=structlog.make_filtering_bound_logger(level),
+        )

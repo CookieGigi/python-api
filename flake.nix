@@ -47,6 +47,31 @@
           end-of-file-fixer.enable = true;
           trim-trailing-whitespace.enable = true;
           check-merge-conflicts.enable = true;
+
+          frontend-eslint = {
+            enable = true;
+            name = "eslint (frontend)";
+            entry = let
+              eslintScript = pkgs.writeShellScript "frontend-eslint" ''
+                ${pkgs.eslint}/bin/eslint \
+                  --config frontend/eslint.config.mjs \
+                  --fix \
+                  "$@"
+              '';
+            in "${eslintScript}";
+            files = "^frontend/.*\\.[jt]sx?$";
+          };
+
+          frontend-prettier = {
+            enable = true;
+            name = "prettier (frontend)";
+            entry = let
+              prettierScript = pkgs.writeShellScript "frontend-prettier" ''
+                ${pkgs.prettier}/bin/prettier --write "$@"
+              '';
+            in "${prettierScript}";
+            files = "^frontend/.*\\.[jt]sx?$";
+          };
         };
       };
     in {
@@ -81,6 +106,10 @@
             traefik
             mkcert
             stdenv.cc.cc.lib
+            typescript-language-server
+            vscode-langservers-extracted
+            prettier
+            eslint
           ]
           ++ pre-commit-check.enabledPackages;
       };

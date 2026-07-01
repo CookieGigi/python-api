@@ -4,7 +4,8 @@ import {
   CopilotChat,
   useConfigureSuggestions,
 } from "@copilotkit/react-core/v2";
-import ModelSelector from "./models_selector";
+import { useContext } from "react";
+import { ThreadContext } from "./copilot_provider";
 
 export default function Chat() {
   useConfigureSuggestions({
@@ -21,5 +22,11 @@ export default function Chat() {
     ],
     available: "always",
   });
-  return <CopilotChat attachments={{ enabled: true }} />;
+  const thread_ctx = useContext(ThreadContext);
+  return (
+    <CopilotChat
+      attachments={{ enabled: true }}
+      threadId={thread_ctx.thread_id}
+    />
+  );
 }
